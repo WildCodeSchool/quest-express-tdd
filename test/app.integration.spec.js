@@ -15,4 +15,17 @@ describe('Test routes', () => {
         done();
       });
   });
+
+  it('POST /bookmarks - error (fields missing) ', (done) => {
+    request(app)
+      .post('/bookmarks')
+      .send({})
+      .expect(422)
+      .expect('Content-Type', /json/)
+      .then(response => {
+        const expected = {error: 'required field(s) missing'};
+        expect(response.body).toEqual(expected);
+        done();
+      });
+  });
 });
