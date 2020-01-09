@@ -15,7 +15,14 @@ app.post('/bookmarks', (req, res) => {
   if (!url || !title) {
     return res.status(422).json({ error: 'required field(s) missing' });
   }
-  return res.sendStatus(201);
+  connection.query('INSERT INTO bookmark SET ?', req.body, (err, stats) => {
+    if (err) return res.status(500).json({ error: err.message, sql: err.sql });
+
+    connection.query('SELECT * FROM bookmark WHERE id = ?', stats.insertId, (err, records) => {
+      if (err) return res.status(500).json({ error: err.message, sql: err.sql });
+      return res.status(201).json(records[0]);
+    });
+  });
 });
 
 module.exports = app;

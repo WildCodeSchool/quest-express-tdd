@@ -23,9 +23,23 @@ describe('Test routes', () => {
       .expect(422)
       .expect('Content-Type', /json/)
       .then(response => {
-        const expected = {error: 'required field(s) missing'};
+        const expected = { error: 'required field(s) missing' };
         expect(response.body).toEqual(expected);
         done();
       });
+  });
+
+  it('POST /bookmarks - OK (fields provided) ', (done) => {
+    request(app)
+      .post('/bookmarks')
+      .send({ url: 'https://jestjs.io', title: 'Jest' })
+      .expect(201)
+      .expect('Content-Type', /json/)
+      .then(response => {
+        const expected = { id: 1, url: 'https://jestjs.io', title: 'Jest' };
+        expect(response.body).toEqual(expected);
+        done();
+      })
+      .catch(done);
   });
 });
